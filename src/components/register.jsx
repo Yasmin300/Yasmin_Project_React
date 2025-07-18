@@ -57,14 +57,14 @@ export default function Register() {
             const user = await res.json();
             setIsLoader(false);
             cleanForm();
-            snackbar(` נרשמת בהצלחה`);
+            snackbar(` נרשמת בהצלחה`, "success");
             navigate('/login');
 
 
         } else {
             setIsLoader(false);
             const err = await res.text()
-            snackbar(` הרשמה נכשלה`);
+            snackbar(`הרשמה נכשלה: ${err}`, "error");
         }
     }
     function cleanForm() {

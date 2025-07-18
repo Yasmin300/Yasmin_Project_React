@@ -36,7 +36,7 @@ export default function Footer() {
 
                 )}
 
-                {detoken && detoken?.isBusiness && (
+                {detoken && (detoken?.isBusiness || detoken?.isAdmin) && (
                     <div className="IconsDiv" onClick={() => navigate('/MyCards')}>
                         <FontAwesomeIcon
                             icon={faUserCircle}

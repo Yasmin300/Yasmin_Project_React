@@ -88,6 +88,13 @@ export default function Navbar() {
                                 </h3>
                             </li>
                         )}
+                        {detoken?.isAdmin && (
+                            <li className="nav-item">
+                                <h3>
+                                    <Link to="/MyCards" className={`nav-link part1 ${path === '/MyCards' ? 'active' : ''}`} onClick={closeNavbar}>My Cards</Link>
+                                </h3>
+                            </li>
+                        )}
                         {
                             detoken?.isAdmin && (
                                 <li className="nav-item">

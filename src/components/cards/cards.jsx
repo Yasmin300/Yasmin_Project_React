@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../pagination/Pagination";
 import "./card.css";
+import "./cardHeader.css";
 export default function GetCards() {
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
@@ -40,15 +41,22 @@ export default function GetCards() {
         });
         if (res.ok) {
             getCards();
-            snackbar("מחקת/הוספת את הכרטיס ממיעודפים שלך");
+            snackbar("מחקת/הוספת את הכרטיס ממיעודפים שלך", "success");
         }
         else {
-            snackbar("הפעולה נכשלה");
+            snackbar("הפעולה נכשלה", "error");
         }
     }
     useEffect(() => {
         getCards();
     }, []);
+
+    useEffect(() => {
+        if (search !== null && search !== "") {
+            setCurrentPage(1);
+        }
+    }, [search]);
+
     function filterCards(card, search) {
         if (search !== null && search != "")
             return card.title.toLowerCase().includes(search?.toLowerCase()) ||

@@ -2,14 +2,35 @@ import { useState, useContext, useEffect } from "react";
 import { MyContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import Pagination from "../pagination/Pagination";
 import './AdminProfile.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+
+function UserImage({ user }) {
+    const [validImg, setValidImg] = useState(true);
+
+    return user.image?.url && validImg ? (
+        <img
+            src={user.image.url}
+            alt={user.image.alt}
+            className="rounded-circle"
+            width="60"
+            height="60"
+            onError={() => setValidImg(false)}
+        />
+    ) : (
+        <FontAwesomeIcon icon={faUser} className="text-secondary" size="2x" />
+    );
+}
+
 
 export default function AdminProfile() {
     const [cards, setCards] = useState([]);
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 10;
+    const [validImg, setValidImg] = useState(true);
 
     const navigate = useNavigate();
     const { snackbar, setIsLoader, token, detoken } = useContext(MyContext);
@@ -39,14 +60,13 @@ export default function AdminProfile() {
                 method: 'DELETE',
             });
             if (res.ok) {
-                snackbar("מחקת את הכרטיס בהצלחה");
+                snackbar("מחקת את הכרטיס בהצלחה", "success");
                 await getCards();
             } else {
-                snackbar("מחיקת הכרטיס נכשלה");
+                snackbar("מחיקת הכרטיס נכשלה", "error");
             }
         } catch (err) {
-            console.error("Delete error:", err);
-            snackbar("שגיאה בעת מחיקת הכרטיס");
+            snackbar("שגיאה בעת מחיקת הכרטיס", "error");
         } finally {
             setIsLoader(false);
         }
@@ -62,10 +82,10 @@ export default function AdminProfile() {
             headers: { 'x-auth-token': token },
         });
         if (res.ok) {
-            snackbar("מחקת את המשתמש והכרטיסים בהצלחה");
+            snackbar("מחקת את המשתמש והכרטיסים בהצלחה", "success");
             await getUsers();
         } else {
-            snackbar("מחיקת המשתמש נכשלה");
+            snackbar("מחיקת המשתמש נכשלה", "error");
         }
         setIsLoader(false);
     };
@@ -75,10 +95,10 @@ export default function AdminProfile() {
             headers: { 'x-auth-token': token },
         });
         if (res.ok) {
-            snackbar("סטטוס המשתמש שונה בהצלחה");
+            snackbar("סטטוס המשתמש שונה בהצלחה", "success");
             await getUsers();
         } else {
-            snackbar("שינוי הסטטוס נכשל");
+            snackbar("שינוי הסטטוס נכשל", "error");
         }
     };
     useEffect(() => {
@@ -89,19 +109,8 @@ export default function AdminProfile() {
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
     const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-    const totalPages = Math.ceil(users.length / usersPerPage);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    const getVisiblePages = () => {
-        const maxPagesAround = window.innerWidth < 576 ? 1 : 2;
-        const start = Math.max(currentPage - maxPagesAround, 2);
-        const end = Math.min(currentPage + maxPagesAround, totalPages - 1);
-        const visible = [];
-        for (let i = start; i <= end; i++) {
-            visible.push(i);
-        }
-        return visible;
-    };
-    const visiblePages = getVisiblePages();
+
     return (
         <div className="TableUsers mt-5">
             <div className="text-center mb-4">
@@ -125,7 +134,7 @@ export default function AdminProfile() {
                         {currentUsers.map((user) => (
                             <tr key={user._id}>
                                 <td data-label="Image">
-                                    <img src={user.image?.url} alt={user.image?.alt} className="rounded-circle" width="60" height="60" />
+                                    <UserImage user={user} />
                                 </td>
                                 <td data-label="Name">
                                     {user.name.first} {user.name.middle} {user.name.last}
@@ -155,45 +164,12 @@ export default function AdminProfile() {
                     </tbody>
                 </table>
             </div>
-            <nav className="UserPag">
-                <ul className="pagination justify-content-center flex-wrap">
-                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => paginate(1)}>« First</button>
-                    </li>
-                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => paginate(currentPage - 1)}>‹ Prev</button>
-                    </li>
-                    <li className={`page-item ${currentPage === 1 ? 'active' : ''}`}>
-                        <button className="page-link" onClick={() => paginate(1)}>1</button>
-                    </li>
-                    {visiblePages[0] > 2 && (
-                        <li className="page-item disabled">
-                            <span className="page-link">...</span>
-                        </li>
-                    )}
-                    {visiblePages.map(num => (
-                        <li key={num} className={`page-item ${currentPage === num ? 'active' : ''}`}>
-                            <button className="page-link" onClick={() => paginate(num)}>{num}</button>
-                        </li>
-                    ))}
-                    {visiblePages[visiblePages.length - 1] < totalPages - 1 && (
-                        <li className="page-item disabled">
-                            <span className="page-link">...</span>
-                        </li>
-                    )}
-                    {totalPages > 1 && (
-                        <li className={`page-item ${currentPage === totalPages ? 'active' : ''}`}>
-                            <button className="page-link" onClick={() => paginate(totalPages)}>{totalPages}</button>
-                        </li>
-                    )}
-                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => paginate(currentPage + 1)}>Next ›</button>
-                    </li>
-                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => paginate(totalPages)}>Last »</button>
-                    </li>
-                </ul>
-            </nav>
+            <Pagination
+                currentPage={currentPage}
+                totalItems={users.length}
+                itemsPerPage={usersPerPage}
+                onPageChange={paginate}
+            />
         </div>
     );
 }

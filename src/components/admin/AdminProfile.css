@@ -12,6 +12,14 @@ td {
     vertical-align: middle !important;
 }
 
+.table button {
+    margin: 5px;
+}
+
+.text-secondary {
+    font-size: 60px;
+}
+
 /* === Mobile Table Responsive View === */
 @media (max-width: 992px) {
     .table-responsive {

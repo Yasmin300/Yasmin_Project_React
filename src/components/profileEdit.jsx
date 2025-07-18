@@ -57,13 +57,13 @@ export default function EditProfile() {
             const user = await res.json();
             setUser(user);
             cleanForm();
-            snackbar(` התקנת פרטים בהצלחה`);
+            snackbar(` התקנת פרטים בהצלחה`, "success");
             navigate('/');
 
 
         } else {
             setIsLoader(false);
-            snackbar(` התקנת הפרטים נכשלה`);
+            snackbar(` התקנת הפרטים נכשלה`, "error");
         }
     }
     function cleanForm() {

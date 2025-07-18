@@ -3,9 +3,12 @@ import { MyContext } from "../../App";
 import { useContext } from "react";
 import { useEffect } from "react";
 import "./card.css";
+import Pagination from "../pagination/Pagination";
 export default function GetFavCards() {
     const [cards, setCards] = useState([]);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const cardPerPage = 15;
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const { snackbar, setIsLoader, setUser, user, search, setSearch, token, detoken } = useContext(MyContext);
     const getCards = async () => {
         setIsLoader(true);
@@ -24,7 +27,7 @@ export default function GetFavCards() {
 
             setCards(updated);
         } else {
-            snackbar("שגיאה בקבלת כרטיסים מועדפים");
+            snackbar("שגיאה בקבלת כרטיסים מועדפים", "error");
         }
 
         setIsLoader(false);
@@ -32,16 +35,16 @@ export default function GetFavCards() {
     const handleFavorite = async (id) => {
         const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
             headers: {
-                'x-auth-token': token,  // <-- send the token here
+                'x-auth-token': token,
             },
             method: 'PATCH',
         });
         if (res.ok) {
             getCards();
-            snackbar("מחקת/הוספת את הכרטיס ממיעודפים שלך");
+            snackbar("מחקת/הוספת את הכרטיס ממיעודפים שלך", "success");
         }
         else {
-            snackbar("הפעולה נכשלה");
+            snackbar("הפעולה נכשלה", "error");
         }
     }
     useEffect(() => {
@@ -53,7 +56,16 @@ export default function GetFavCards() {
                 card.description.toLowerCase().includes(search?.toLowerCase());
         else return true;
     }
+    useEffect(() => {
+        if (search !== null && search !== "") {
+            setCurrentPage(1);
+        }
+    }, [search]);
+
     const filteredCards = cards.filter(card => filterCards(card, search));
+    const indexOfLastCard = currentPage * cardPerPage;
+    const indexOfFirstCard = indexOfLastCard - cardPerPage;
+    const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard);
     return (
         <div className="Cards">
             <h1>Cards Page</h1>
@@ -61,7 +73,7 @@ export default function GetFavCards() {
             <hr />
             <div className="CardsContainer">
                 {
-                    filteredCards.map((card, i) =>
+                    currentCards.map((card, i) =>
                         <div key={card._id} id={card._id}>
                             <div className="cardImage">
                                 <img src={card.image.url} alt={card.image.alt} />
@@ -88,6 +100,12 @@ export default function GetFavCards() {
                     )
                 }
             </div>
+            <Pagination
+                currentPage={currentPage}
+                totalItems={filteredCards.length}
+                itemsPerPage={cardPerPage}
+                onPageChange={paginate}
+            />
         </div>
     )
 }

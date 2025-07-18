@@ -63,7 +63,7 @@ export default function Login() {
 
             if (!res.ok) {
                 const err = await res.text();
-                snackbar(err);
+                snackbar(err, "error");
                 setIsLoader(false);
                 return;
             }
@@ -87,7 +87,7 @@ export default function Login() {
             });
             if (!user.ok) {
                 const err = await user.text();
-                snackbar(err);
+                snackbar(err, "error");
                 setIsLoader(false);
                 return;
             }
@@ -96,13 +96,13 @@ export default function Login() {
                 setUser(users);
             }
 
-            snackbar(`התחברת בהצלחה!`);
+            snackbar(`התחברת בהצלחה!`, "success");
 
             cleanForm();
             navigate('/');
 
         } catch (error) {
-            snackbar('אירעה שגיאה בשרת, נסה שוב מאוחר יותר.');
+            snackbar('אירעה שגיאה בשרת, נסה שוב מאוחר יותר.', "error");
             console.error(error);
         }
 

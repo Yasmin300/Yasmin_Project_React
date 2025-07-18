@@ -31,10 +31,11 @@ function App() {
     }
   }, [darkMode]);
 
-  const snackbar = (text) => {
+  const snackbar = (text, type = "") => {
     setSnackbarText(text);
+    setSnackbarType(type);
     setIsSnackbar(true);
-    setTimeout(() => setIsSnackbar(false), 2000);
+    setTimeout(() => setIsSnackbar(false), 3000);
   };
 
   useEffect(() => {

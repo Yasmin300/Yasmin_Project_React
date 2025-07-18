@@ -17,53 +17,30 @@ export default function ShowCard() {
             });
 
             if (!res.ok) {
-                snackbar("לא ניתן לטעון את הכרטיס.");
+                snackbar("לא ניתן לטעון את הכרטיס.", "error");
                 setIsLoader(false);
                 return;
             }
 
             const cardData = await res.json();
-
-            /*    const userRes = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/${cardData.user_id}`, {
-                    method: 'GET',
-                    headers: {
-                        'x-auth-token': token,  // <-- send the token here
-                        'Content-Type': 'application/json'
-                    }
-                });
-    
-                if (!userRes.ok) {
-                    snackbar("לא ניתן לטעון את פרטי המשתמש.");
-                    setIsLoader(false);
-                    return;
-                }
-    */
-            //  const userData = await userRes.json();
-            //  const fullName = `${userData.name.first} ${userData.name.last}`;
-
             const updatedCard = {
                 ...cardData,
-                //   userName: fullName,
                 favorite: user && cardData.likes.includes(detoken._id),
             };
 
             setCard(updatedCard);
         } catch (err) {
-            snackbar("אירעה שגיאה בטעינת הכרטיס.");
+            snackbar("אירעה שגיאה בטעינת הכרטיס.", "error");
             console.error(err);
         } finally {
             setIsLoader(false);
         }
     };
-
-
     useEffect(() => {
         if (cardId) getCard(cardId);
     }, [cardId]);
 
     const fullAddress = `${card.address?.street || ''} ${card.address?.houseNumber || ''}, ${card.address?.city || ''}, ${card.address?.state || ''}, ${card.address?.zip || ''}, ${card.address?.country || ''}`;
-
-    const googleMapSrc = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${encodeURIComponent(fullAddress)}`;
 
     return (
         <div className="businessPage">

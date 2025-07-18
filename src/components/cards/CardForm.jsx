@@ -39,7 +39,7 @@ export default function CardForm() {
                 zip: card.address?.zip || 0
             });
         } catch (err) {
-            snackbar("שגיאה בטעינת הכרטיס");
+            snackbar("שגיאה בטעינת הכרטיס", "error");
         } finally {
             setIsLoader(false);
         }
@@ -88,11 +88,12 @@ export default function CardForm() {
 
         setIsLoader(false);
         if (res.ok) {
-            snackbar(isEdit ? "הכרטיס עודכן" : "כרטיס חדש נוסף");
+            snackbar(isEdit ? "הכרטיס עודכן" : "כרטיס חדש נוסף", "success");
             resetForm();
             navigate("/myCards");
         } else {
-            snackbar("שליחה נכשלה");
+            const err = await res.text();
+            snackbar(`שליחה נכשלה: ${err || "שגיאה לא ידועה"}`, "error");
         }
     };
 

@@ -4,16 +4,19 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./card.css";
+import Pagination from "../pagination/Pagination";
 export default function MyCards() {
     const [cards, setCards] = useState([]);
     const navigate = useNavigate();
     const { snackbar, setIsLoader, user, setSnackbarType, setLoaderType, search, token, detoken } = useContext(MyContext);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const cardPerPage = 15;
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const getCards = async () => {
         const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/my-cards', {
             method: 'GET',
             headers: {
-                'x-auth-token': token,  // <-- send the token here
+                'x-auth-token': token,
                 'Content-Type': 'application/json'
             }
         });
@@ -23,24 +26,22 @@ export default function MyCards() {
                 ...card,
                 favorite: user && card.likes.includes(detoken._id)
             }));
-
             setCards(updated);
-            //setCards(data);
         }
     }
     const handleFavorite = async (id) => {
         const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
             headers: {
-                'x-auth-token': token,  // <-- send the token here
+                'x-auth-token': token,
             },
             method: 'PATCH',
         });
         if (res.ok) {
             getCards();
-            snackbar("מחקת/הוספת את הכרטיס ממיעודפים שלך");
+            snackbar("מחקת/הוספת את הכרטיס ממיעודפים שלך", "success");
         }
         else {
-            snackbar("הפעולה נכשלה");
+            snackbar("הפעולה נכשלה", "error");
         }
     }
     useEffect(() => {
@@ -56,28 +57,25 @@ export default function MyCards() {
     }
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this card?")) return;
-
-        console.log("Delete card with id:", id);
         setIsLoader(true);
-
         try {
             const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
                 headers: {
-                    'x-auth-token': token,  // <-- send the token here
+                    'x-auth-token': token,
                 },
                 method: 'DELETE',
             });
 
             if (res.ok) {
-                snackbar("מחקת את הכרטיס בהצלחה");
+                snackbar("מחקת את הכרטיס בהצלחה", "success");
                 await getCards();
             } else {
-                snackbar("מחיקת הכרטיס נכשלה");
+                snackbar("מחיקת הכרטיס נכשלה", "error");
             }
 
         } catch (err) {
             console.error("Delete error:", err);
-            snackbar("שגיאה בעת מחיקת הכרטיס");
+            snackbar("שגיאה בעת מחיקת הכרטיס", "error");
         } finally {
             setIsLoader(false);
         }
@@ -89,6 +87,9 @@ export default function MyCards() {
         else return true;
     }
     const filteredCards = cards.filter(card => filterCards(card, search));
+    const indexOfLastCard = currentPage * cardPerPage;
+    const indexOfFirstCard = indexOfLastCard - cardPerPage;
+    const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard);
     return (
         <div className="Cards">
             <h1>My Cards Page</h1>
@@ -96,7 +97,7 @@ export default function MyCards() {
             <hr />
             <div className="CardsContainer">
                 {
-                    filteredCards.map((card, i) =>
+                    currentCards.map((card, i) =>
                         <div key={card._id} id={card._id}>
                             <div className="cardImage">
                                 <img src={card.image.url} alt={card.image.alt} />
@@ -118,18 +119,18 @@ export default function MyCards() {
                                         style={{ cursor: 'pointer', marginLeft: '10px' }}
                                     ></i>
                                 }
-                                {detoken && detoken?.isBusiness && (
+                                {detoken && (detoken?.isBusiness || detoken?.isAdmin) && (
                                     <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
                                         <i
                                             className="fas fa-edit"
                                             onClick={() => handleEdit(card._id)}
-                                            style={{ cursor: 'pointer', color: '#007bff' }} // blue for edit
+                                            style={{ cursor: 'pointer', color: '#007bff' }}
                                         ></i>
 
                                         <i
                                             className="fas fa-trash"
                                             onClick={() => handleDelete(card._id)}
-                                            style={{ cursor: 'pointer', color: '#dc3545' }} // red for delete
+                                            style={{ cursor: 'pointer', color: '#dc3545' }}
                                         ></i>
                                     </div>
                                 )}
@@ -138,11 +139,17 @@ export default function MyCards() {
                     )
                 }
             </div>
-            {detoken && detoken?.isBusiness && (
+            {detoken && (detoken?.isBusiness || detoken?.isAdmin) && (
                 <button className="plus-button" onClick={addCard}>
                     +
                 </button>
             )}
+            <Pagination
+                currentPage={currentPage}
+                totalItems={filteredCards.length}
+                itemsPerPage={cardPerPage}
+                onPageChange={paginate}
+            />
         </div>
     )
 }
