@@ -36,7 +36,7 @@ export default function AdminProfile() {
     const { snackbar, setIsLoader, token, detoken } = useContext(MyContext);
 
     const getCards = async () => {
-        const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards');
+        const res = await fetch('https://bcard-ojqa.onrender.com/cards');
         if (res.ok) {
             const data = await res.json();
             setCards(data);
@@ -44,7 +44,7 @@ export default function AdminProfile() {
         setIsLoader(false);
     };
     const getUsers = async () => {
-        const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users', {
+        const res = await fetch('https://bcard-ojqa.onrender.com/users', {
             headers: { 'x-auth-token': token },
         });
         if (res.ok) {
@@ -55,7 +55,7 @@ export default function AdminProfile() {
     };
     const deleteCard = async (id) => {
         try {
-            const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
+            const res = await fetch(`https://bcard-ojqa.onrender.com/cards/${id}`, {
                 headers: { 'x-auth-token': token },
                 method: 'DELETE',
             });
@@ -77,7 +77,7 @@ export default function AdminProfile() {
         for (const card of userCards) {
             await deleteCard(card._id);
         }
-        const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/${id}`, {
+        const res = await fetch(`https://bcard-ojqa.onrender.com/users/${id}`, {
             method: 'DELETE',
             headers: { 'x-auth-token': token },
         });
@@ -90,7 +90,7 @@ export default function AdminProfile() {
         setIsLoader(false);
     };
     const changeStatus = async (id) => {
-        const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/${id}`, {
+        const res = await fetch(`https://bcard-ojqa.onrender.com/users/${id}`, {
             method: 'PATCH',
             headers: { 'x-auth-token': token },
         });

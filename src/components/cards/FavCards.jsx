@@ -13,7 +13,7 @@ export default function GetFavCards() {
     const getCards = async () => {
         setIsLoader(true);
 
-        const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards');
+        const res = await fetch('https://bcard-ojqa.onrender.com/cards');
         if (res.ok) {
             const data = await res.json();
             const favorites = data.filter(card =>
@@ -33,7 +33,7 @@ export default function GetFavCards() {
         setIsLoader(false);
     }
     const handleFavorite = async (id) => {
-        const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
+        const res = await fetch(`https://bcard-ojqa.onrender.com/cards/${id}`, {
             headers: {
                 'x-auth-token': token,
             },

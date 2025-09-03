@@ -55,7 +55,7 @@ export default function Login() {
         setIsLoader(true);
 
         try {
-            const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/login', {
+            const res = await fetch('https://bcard-ojqa.onrender.com/users/login', {
                 method: 'POST',
                 headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(form),
@@ -78,7 +78,7 @@ export default function Login() {
                 isAdmin: decoded.isAdmin,
             });
             setToken(token);
-            const user = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/${decoded._id}`, {
+            const user = await fetch(`https://bcard-ojqa.onrender.com/users/${decoded._id}`, {
                 method: 'GET',
                 headers: {
                     'x-auth-token': token,

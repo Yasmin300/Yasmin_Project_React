@@ -13,7 +13,7 @@ export default function MyCards() {
     const cardPerPage = 15;
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const getCards = async () => {
-        const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/my-cards', {
+        const res = await fetch('https://bcard-ojqa.onrender.com/cards/my-cards', {
             method: 'GET',
             headers: {
                 'x-auth-token': token,
@@ -30,7 +30,7 @@ export default function MyCards() {
         }
     }
     const handleFavorite = async (id) => {
-        const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
+        const res = await fetch(`https://bcard-ojqa.onrender.com/cards/${id}`, {
             headers: {
                 'x-auth-token': token,
             },
@@ -59,7 +59,7 @@ export default function MyCards() {
         if (!window.confirm("Are you sure you want to delete this card?")) return;
         setIsLoader(true);
         try {
-            const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
+            const res = await fetch(`https://bcard-ojqa.onrender.com/cards/${id}`, {
                 headers: {
                     'x-auth-token': token,
                 },

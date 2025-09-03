@@ -101,7 +101,7 @@ export default defineConfig({
 
 - This project uses JWT-based authentication. Tokens are stored in `localStorage`.
 - React Context is used for global state (user, loader, snackbar).
-- The backend API is hosted at: `https://monkfish-app-z9uza.ondigitalocean.app/bcard2/`
+- The backend API is hosted at: `https://bcard-ojqa.onrender.com`
 
 ---
 

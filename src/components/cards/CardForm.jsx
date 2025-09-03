@@ -19,7 +19,7 @@ export default function CardForm() {
     const fetchCard = async () => {
         setIsLoader(true);
         try {
-            const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${cardId}`);
+            const res = await fetch(`https://bcard-ojqa.onrender.com/cards/${cardId}`);
             if (!res.ok) throw new Error("כשל בטעינת כרטיס");
             const card = await res.json();
             setForm({
@@ -55,8 +55,8 @@ export default function CardForm() {
 
         const method = isEdit ? "PUT" : "POST";
         const url = isEdit
-            ? `https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${cardId}`
-            : `https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards`;
+            ? `https://bcard-ojqa.onrender.com/cards/${cardId}`
+            : `https://bcard-ojqa.onrender.com/cards`;
 
         const requestBody = {
             title: form.title,

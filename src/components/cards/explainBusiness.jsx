@@ -11,7 +11,7 @@ export default function ShowCard() {
     const getCard = async id => {
         setIsLoader(true);
         try {
-            const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
+            const res = await fetch(`https://bcard-ojqa.onrender.com/cards/${id}`, {
                 method: 'GET',
                 redirect: 'follow'
             });

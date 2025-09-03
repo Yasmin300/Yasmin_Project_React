@@ -14,7 +14,7 @@ export default function GetCards() {
     const { snackbar, setIsLoader, setUser, user, search, setSearch, token, detoken } = useContext(MyContext);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const getCards = async () => {
-        const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards', {
+        const res = await fetch('https://bcard-ojqa.onrender.com/cards', {
             method: 'GET',
         });
         if (res.ok) {
@@ -33,7 +33,7 @@ export default function GetCards() {
         navigate(`/explainCard/${id}`);
     }
     const handleFavorite = async (id) => {
-        const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/cards/${id}`, {
+        const res = await fetch(`https://bcard-ojqa.onrender.com/cards/${id}`, {
             headers: {
                 'x-auth-token': token,
             },

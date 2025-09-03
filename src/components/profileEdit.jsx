@@ -43,7 +43,7 @@ export default function EditProfile() {
 
             },
         };
-        const res = await fetch(`https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users/${detoken._id}`, {
+        const res = await fetch(`https://bcard-ojqa.onrender.com/users/${detoken._id}`, {
             method: 'PUT',
             headers: {
                 'x-auth-token': token,

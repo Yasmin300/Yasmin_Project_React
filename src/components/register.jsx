@@ -47,7 +47,7 @@ export default function Register() {
             },
             isBusiness: form.business
         };
-        const res = await fetch('https://monkfish-app-z9uza.ondigitalocean.app/bcard2/users', {
+        const res = await fetch('https://bcard-ojqa.onrender.com/users', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify(requestBody),
